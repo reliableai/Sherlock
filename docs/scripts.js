@@ -1,11 +1,18 @@
-// Minimal JavaScript for interactive elements (e.g., announcement toggle)
 document.addEventListener('DOMContentLoaded', function() {
-    var announcementBanner = document.getElementById('announcement');
-    var closeBtn = document.getElementById('ann-close');
-    if (closeBtn && announcementBanner) {
-      closeBtn.addEventListener('click', function() {
-        announcementBanner.style.display = 'none';
-      });
-    }
-  });
+  const announcementBanner = document.getElementById('announcement');
+  if (!announcementBanner) {
+    console.error('Announcement banner not found.');
+    return;
+  }
   
+  const closeBtn = announcementBanner.querySelector('#ann-close');
+  if (!closeBtn) {
+    console.error('Close button (#ann-close) not found within the announcement banner.');
+    return;
+  }
+  
+  closeBtn.addEventListener('click', function() {
+    announcementBanner.style.display = 'none';
+    console.log('Announcement banner hidden.');
+  });
+});
