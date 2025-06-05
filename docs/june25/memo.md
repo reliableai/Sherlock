@@ -56,5 +56,6 @@ Submit a Jupyter notebook containing:
 1. All code with explanations
 2. Your final report as a markdown cell
 
+Openrouter API key: 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
 
 Good luck, detective! The truth is hidden in the data...
