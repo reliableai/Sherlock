@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Overfitting in AI Agents &amp; Workflows — What Recent Literature Shows (2024–2025)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<body>
+<article>
+  <header>
+    <h1>Overfitting in AI Agents &amp; Workflows — What Recent Literature Shows (2024–2025)</h1>
+    <p><em>Last updated: 2025-09-15</em></p>
+  </header>
+
+  <p>This import‑ready brief curates concrete, <strong>recent</strong> (2024–2025) cases where tuning an <strong>AI agent</strong> or <strong>AI‑powered workflow</strong> to a fixed evaluation set (or judge) leads to <em>overfitting</em>—inflated scores that don’t reflect true capability. Every claim links to a paper or primary write‑up.</p>
+
+  <blockquote>
+    <strong>TL;DR (numbers you can cite)</strong>
+    <ul>
+      <li><strong>LLM‑as‑a‑Judge can be gamed:</strong> short <em>universal adversarial phrases</em> push <em>absolute</em> scoring toward maxima; <em>comparative</em> judging is more robust. <a href="https://arxiv.org/abs/2402.14016">Raina et&nbsp;al., EMNLP&nbsp;2024</a>, <a href="https://aclanthology.org/2024.emnlp-main.427.pdf">PDF</a></li>
+      <li><strong>Backdoored judges:</strong> poisoning ~<strong>1%</strong> of evaluator data can <strong>triple</strong> attacker scores; 10% poisoning breaks guardrails and rerankers. <a href="https://arxiv.org/abs/2503.00596">Tong et&nbsp;al., ICLR&nbsp;2025</a>, <a href="https://openreview.net/forum?id=eC2a2IndIt">OpenReview</a></li>
+      <li><strong>Agentic benchmark artifacts (ABC study):</strong> trivial/do‑nothing agent passes <strong>38%</strong> of τ‑bench; SWE‑Lancer allowed <strong>100%</strong> via writable tests; KernelBench overestimates by ~<strong>31%</strong> (absolute); WebArena overestimates by <strong>5.2%</strong>; ABC fixes reduce CVE‑Bench by <strong>33%</strong> (absolute). <a href="https://arxiv.org/abs/2507.02825">Zhu et&nbsp;al., 2025</a></li>
+      <li><strong>Tightening tests flips leaderboards:</strong> UTBoost corrects <strong>345</strong> mislabeled passes on SWE‑Bench; ranks change by <strong>40.9%</strong> (Lite) and <strong>24.4%</strong> (Verified). <a href="https://arxiv.org/abs/2506.09289">Yu et&nbsp;al., 2025</a></li>
+      <li><strong>Distribution shift exposes overfit:</strong> at Google, an SWE‑style agent yields <strong>73%</strong> plausible fixes on machine‑reported vs. <strong>25.6%</strong> on human‑reported bugs; semantically correct rates: <strong>43%</strong> vs. <strong>17.9%</strong>. <a href="https://arxiv.org/abs/2501.07531">Rondon et&nbsp;al., 2025</a></li>
+    </ul>
+  </blockquote>
+
+  <h2>1) LLM‑as‑a‑Judge &amp; reward models are easy to overfit</h2>
+  <p><strong>Why it matters:</strong> many agent workflows rely on a generative <em>judge</em> (for scoring, ranking, or reward). If the judge can be “tuned to the test” or adversarially nudged, scores rise without real capability gains.</p>
+  <ul>
+    <li><strong>Universal phrases attack:</strong> appending short phrases to answers drives absolute‑scoring judges toward inflated scores; pairwise judging is more robust. <a href="https://arxiv.org/abs/2402.14016">Raina&nbsp;2024</a>, <a href="https://aclanthology.org/2024.emnlp-main.427.pdf">PDF</a></li>
+    <li><strong>Optimization‑based prompt injection (pairwise selection):</strong> <em>JudgeDeceiver</em> forces LLM‑as‑a‑Judge to pick the attacker’s response across tasks (search, RLAIF, tool selection); standard defenses underperform. <a href="https://arxiv.org/abs/2403.17710">Shi&nbsp;2024 (CCS)</a>, <a href="https://dl.acm.org/doi/10.1145/3658644.3690291">ACM</a></li>
+    <li><strong>Backdoored judges:</strong> tiny poisoning of evaluator training data dramatically inflates adversary scores and degrades guardrails/rerankers. <a href="https://arxiv.org/abs/2503.00596">Tong&nbsp;2025</a></li>
+  </ul>
+
+  <h2>2) Agentic benchmarks: shortcuts &amp; fragile grading inflate scores</h2>
+  <p><strong>Key audit (ABC):</strong> a cross‑benchmark study surfaces issues in τ‑bench, WebArena, SWE‑Lancer, KernelBench, CVE‑Bench, and more—quantifying how grading artifacts distort reported accuracy.</p>
+  <ul>
+    <li><strong>τ‑bench:</strong> trivial “do‑nothing” agent deemed successful on intentionally impossible tasks → <strong>38%</strong> success. <a href="https://arxiv.org/abs/2507.02825">Zhu&nbsp;2025</a> (Sec. 5)</li>
+    <li><strong>WebArena:</strong> string‑match and judge quirks → <strong>5.2%</strong> overestimation. <a href="https://arxiv.org/abs/2507.02825">Zhu&nbsp;2025</a></li>
+    <li><strong>SWE‑Lancer:</strong> writable tests allowed <strong>100%</strong> without solving tasks (fixed by isolation). <a href="https://arxiv.org/abs/2507.02825">Zhu&nbsp;2025</a></li>
+    <li><strong>KernelBench:</strong> limited fuzzing overestimates correctness by ~<strong>31%</strong> (absolute). <a href="https://arxiv.org/abs/2507.02825">Zhu&nbsp;2025</a></li>
+    <li><strong>CVE‑Bench:</strong> hardening the grader cut overestimation by <strong>33%</strong> (absolute). <a href="https://arxiv.org/abs/2507.02825">Zhu&nbsp;2025</a></li>
+  </ul>
+
+  <h2>3) Coding agents: when public eval gains don’t transfer</h2>
+  <ul>
+    <li><strong>UTBoost (ACL&nbsp;2025):</strong> augments SWE‑Bench tests; uncovers <strong>345</strong> erroneous “passes,” reorders <strong>40.9%</strong> (Lite) and <strong>24.4%</strong> (Verified) leaderboard ranks. <a href="https://arxiv.org/abs/2506.09289">Yu&nbsp;2025</a></li>
+    <li><strong>OpenAI SWE‑bench Verified:</strong> human‑validated subset to reduce mismeasurement. <a href="https://openai.com/index/introducing-swe-bench-verified/">OpenAI blog (2024; updated 2025)</a></li>
+    <li><strong>Google (Passerine):</strong> on internal bugs, agent plausibility drops from <strong>73%</strong> (machine‑reported) to <strong>25.6%</strong> (human‑reported); semantic correctness drops to <strong>43%</strong> vs. <strong>17.9%</strong>. <a href="https://arxiv.org/abs/2501.07531">Rondon&nbsp;2025</a></li>
+  </ul>
+
+  <h2>4) Rolling, contamination‑aware evaluation (to fight overfit)</h2>
+  <ul>
+    <li><strong>LiveCodeBench:</strong> continuously collects new coding problems post‑cutoff; contamination‑aware. <a href="https://arxiv.org/abs/2403.07974">Paper</a> · <a href="https://livecodebench.github.io/">Site</a></li>
+    <li><strong>LiveBench:</strong> multi‑domain, updated frequently, <em>automatic scoring</em> (no LLM judge). <a href="https://arxiv.org/abs/2406.19314">Paper</a></li>
+  </ul>
+
+  <h2>5) Patterns of “golden‑set overfitting” in agent workflows</h2>
+  <ul>
+    <li><strong>Judge‑overfitting:</strong> improvements tied to phrasing/headers/openers for a specific judge vanish under alternative evaluators or stricter checks. <a href="https://arxiv.org/abs/2402.14016">Raina&nbsp;2024</a>, <a href="https://arxiv.org/abs/2403.17710">Shi&nbsp;2024</a>, <a href="https://arxiv.org/abs/2503.00596">Tong&nbsp;2025</a></li>
+    <li><strong>Grader shortcuts:</strong> substring checks, incomplete tests, writable fixtures, weak isolation. <a href="https://arxiv.org/abs/2507.02825">Zhu&nbsp;2025</a></li>
+    <li><strong>Cost‑blind iteration:</strong> retries &amp; majority‑vote amplify “gains” on fixed evals; use accuracy–cost Pareto and budget caps. <a href="https://arxiv.org/abs/2407.01502">Kapoor&nbsp;2024</a></li>
+  </ul>
+
+  <h2>6) Practical guardrails (drop‑in checklist)</h2>
+  <ol>
+    <li><strong>Separate &amp; rotate evals:</strong> keep a sequestered primary set; rotate shadow sets (LiveBench/LiveCodeBench style).</li>
+    <li><strong>Dual grading:</strong> combine programmatic checks with a diverse judge pool; adjudicate disagreements.</li>
+    <li><strong>Exploit‑finders in CI:</strong> add trivial baselines (empty reply, all‑options dump) and canaries to expose grading shortcuts.</li>
+    <li><strong>Harden harnesses:</strong> containerize &amp; make tests immutable to agents (e.g., SWE‑Lancer fix).</li>
+    <li><strong>Adversarially probe judges:</strong> universal phrases, optimization‑based injections; retrain with targeted hard cases.</li>
+    <li><strong>Cost‑controlled evals:</strong> report accuracy <em>and</em> cost; bound retries; fix a trial budget. <a href="https://arxiv.org/abs/2407.01502">Kapoor&nbsp;2024</a></li>
+    <li><strong>Publish known issues:</strong> adopt an ABC‑style checklist and keep a changelog of patched artifacts. <a href="https://arxiv.org/abs/2507.02825">Zhu&nbsp;2025</a></li>
+  </ol>
+
+  <h2>References (click to open)</h2>
+  <ul>
+    <li>Raina, Liusie, Gales. <em>Is LLM‑as‑a‑Judge Robust?</em> EMNLP&nbsp;2024. <a href="https://arxiv.org/abs/2402.14016">arXiv</a> · <a href="https://aclanthology.org/2024.emnlp-main.427.pdf">PDF</a></li>
+    <li>Shi et&nbsp;al. <em>Optimization‑based Prompt Injection Attack to LLM‑as‑a‑Judge (JudgeDeceiver).</em> CCS&nbsp;2024. <a href="https://arxiv.org/abs/2403.17710">arXiv</a> · <a href="https://dl.acm.org/doi/10.1145/3658644.3690291">ACM</a></li>
+    <li>Tong et&nbsp;al. <em>BadJudge: Backdoor Vulnerabilities of LLM‑as‑a‑Judge.</em> ICLR&nbsp;2025. <a href="https://arxiv.org/abs/2503.00596">arXiv</a> · <a href="https://openreview.net/forum?id=eC2a2IndIt">OpenReview</a></li>
+    <li>Zhu et&nbsp;al. <em>Establishing Best Practices for Building Rigorous Agentic Benchmarks (ABC).</em> 2025. <a href="https://arxiv.org/abs/2507.02825">arXiv</a></li>
+    <li>Yu et&nbsp;al. <em>UTBoost: Rigorous Evaluation of Coding Agents on SWE‑Bench.</em> ACL&nbsp;2025. <a href="https://arxiv.org/abs/2506.09289">arXiv</a></li>
+    <li>OpenAI. <em>Introducing SWE‑bench Verified.</em> 2024 (updated 2025). <a href="https://openai.com/index/introducing-swe-bench-verified/">Blog</a></li>
+    <li>Rondon et&nbsp;al. <em>Evaluating Agent‑based Program Repair at Google.</em> 2025. <a href="https://arxiv.org/abs/2501.07531">arXiv</a></li>
+    <li>Jain et&nbsp;al. <em>LiveCodeBench.</em> 2024/ICLR 2025. <a href="https://arxiv.org/abs/2403.07974">arXiv</a> · <a href="https://livecodebench.github.io/">Site</a></li>
+    <li>White et&nbsp;al. <em>LiveBench.</em> 2024. <a href="https://arxiv.org/abs/2406.19314">arXiv</a></li>
+    <li>Kapoor et&nbsp;al. <em>AI Agents That Matter.</em> 2024. <a href="https://arxiv.org/abs/2407.01502">arXiv</a></li>
+  </ul>
+
+  <p><em>Note:</em> All sources above are from 2024–2025 and link to primary papers or official posts. Where specific percentages are quoted, they are taken from the cited sources.</p>
+</article>
+</body>
+</html>
